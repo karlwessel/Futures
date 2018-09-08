@@ -27,11 +27,12 @@ function Executor()
     Executor(c1, c2)
 end
 
-function schedule(e::Executor, fn::Function)
-    t =  @task fn()
+function schedule(e::Executor, t::Task)
     put!(e.toworker, t)
     t
 end
+
+schedule(e::Executor, fn::Function) = schedule(e, @task fn())
 
 
 end # module

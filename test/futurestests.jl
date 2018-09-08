@@ -24,4 +24,17 @@ future2 = schedule(scheduler, fn2)
 @test istaskdone(future)
 @test istaskdone(future2)
 @test fetch(future) == 1
+
+fn3(a) = (sleep(0.5); a)
+@test fn3(1) == 1
+@test fn3(2) == 2
+
+future = schedule(scheduler, @task fn3(2))
+future2 = schedule(scheduler, @task fn3(3))
+@test !istaskdone(future)
+@test !istaskdone(future2)
+@test fetch(future2) == 3
+@test istaskdone(future)
+@test istaskdone(future2)
+@test fetch(future) == 2
 end
