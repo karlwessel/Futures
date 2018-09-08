@@ -1,7 +1,7 @@
 module Futures
 using DataStructures
 import Base:schedule
-export Executor, state
+export Executor, state, cancel
 
 function worker(fromboss::Channel{Task}, toboss::Channel)
     while true
@@ -40,7 +40,13 @@ function state(t::Task)
     elseif istaskstarted(t)
         "running"
     else
-        "in queue"
+        "not yet started"
+    end
+end
+
+function cancel(e::Executor)
+    while(isready(e.toworker))
+        take!(e.toworker)
     end
 end
 
