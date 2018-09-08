@@ -1,7 +1,7 @@
 module Futures
 using DataStructures
 import Base:schedule
-export Executor, schedule
+export Executor, state
 
 function worker(fromboss::Channel{Task}, toboss::Channel)
     while true
@@ -34,5 +34,14 @@ end
 
 schedule(e::Executor, fn::Function) = schedule(e, @task fn())
 
+function state(t::Task)
+    if istaskdone(t)
+        "done"
+    elseif istaskstarted(t)
+        "running"
+    else
+        "in queue"
+    end
+end
 
 end # module

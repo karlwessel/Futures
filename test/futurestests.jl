@@ -12,9 +12,15 @@ future = schedule(scheduler, fn)
 future2 = schedule(scheduler, fn2)
 @test !istaskdone(future)
 @test !istaskdone(future2)
+sleep(0.15)
+@test state(future) == "running"
+@test state(future2) == "in queue"
 @test fetch(future) == 1
 @test istaskdone(future)
 @test !istaskdone(future2)
+sleep(0.15)
+@test state(future) == "done"
+@test state(future2) == "running"
 @test fetch(future2) == 2
 future = schedule(scheduler, fn)
 future2 = schedule(scheduler, fn2)
